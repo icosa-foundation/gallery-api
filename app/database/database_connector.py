@@ -1,6 +1,8 @@
 import json
 import sqlalchemy
 from sqlalchemy.pool import NullPool
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker
 from databases import Database
 
 with open("config.json") as config_file:
@@ -13,4 +15,11 @@ database = Database(DATABASE_URL)
 metadata = sqlalchemy.MetaData()
 
 engine = sqlalchemy.create_engine(DATABASE_URL, poolclass=NullPool)
+
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
+Base = declarative_base()
+
+db = SessionLocal()
+
 metadata.create_all(engine)
